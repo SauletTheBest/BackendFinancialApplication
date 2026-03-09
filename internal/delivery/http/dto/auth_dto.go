@@ -1,7 +1,7 @@
 package dto
 
 
-type RegisterRequest struct {
+type RegisterRequest struct { //basically two rows but i can extend in the future
 	Email string `json:"email"`
 	Password string `json:"password"`
 }
