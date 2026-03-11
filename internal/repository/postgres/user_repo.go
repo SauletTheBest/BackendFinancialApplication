@@ -1,0 +1,45 @@
+package postgres
+
+import (
+	"github.com/SauletTheBest/BackendFinancialApplication/internal/repository"
+	"github.com/SauletTheBest/BackendFinancialApplication/internal/domain"
+	"context"
+	"gorm.io/gorm"
+	"github.com/google/uuid"
+)
+
+type UserRepo struct {
+	db *gorm.DB
+}
+
+func NewUserRepo(db *gorm.DB) repository.UserRepository {
+	return &UserRepo{db: db }
+}
+
+func (r *UserRepo) Create(ctx context.Context, user *domain.User) error {
+	return r.db.WithContext(ctx).Create(user).Error
+}
+
+func (r *UserRepo) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
+	var user domain.User
+
+	err := r.db.WithContext(ctx).Where("email = ?", email).First(&user).Error 
+
+	if err != nil {
+		return  nil, err
+	}
+
+	return &user, nil
+}
+
+func (r *UserRepo) GetByID(ctx context.Context, id uuid.UUID) (*domain.User, error) {
+	
+	var user domain.User 
+	err := r.db.WithContext(ctx).Where("id = ?", id).First(&user).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
